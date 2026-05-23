@@ -234,6 +234,7 @@
     const decimals = f==="WHR"?2 : f==="hba1c"||f==="TG"||f==="HDL_C"?1 : 0;
     $(f).value = dv.toFixed(decimals);
     checkAll();
+    if (!window._hardLimitBlocked && !$("btn-calc").disabled) window.calcSilent();
   };
 
   function syncToSlider(f) {
@@ -420,10 +421,9 @@
   };
 
   // ═══════════════════════════════════════════════════════
-  // 8. Calculate
+  // 8. Calculate (silent: no scroll; public: with scroll)
   // ═══════════════════════════════════════════════════════
-  window.calc = function() {
-    if ($("btn-calc").disabled) return;
+  function doCalc(scroll) {
     const vals = {};
     for (const f of FEATURES) vals[f] = toNative(f, $(f).value);
     const result = predict(vals);
@@ -436,12 +436,9 @@
       : ({1:"Metabolic Syndrome",2:"Hypertensive",3:"Severe Metabolic",4:"High HDL",5:"Metabolically Favorable"});
 
     if (probChart) { probChart.destroy(); probChart=null; }
-
-    // Store result for chart toggling
     lastResult = result;
     chartMode = 0;
 
-    // ── Badge Card ──
     $("badge-card").innerHTML = `
       <div class="flex flex-col items-center justify-center text-center h-full">
         <div class="text-xs text-muted uppercase tracking-[0.15em] mb-2">${t("predictedSubtype")}</div>
@@ -453,7 +450,6 @@
         </div>
       </div>`;
 
-    // ── Chart Card ──
     $("chart-card").innerHTML = `
       <div class="flex flex-col h-full w-full">
         <div id="chart-area" class="flex-1" style="min-height:280px"><canvas id="prob-chart"></canvas></div>
@@ -467,9 +463,19 @@
       </div>`;
 
     $("results-area").classList.remove("hidden");
-    $("badge-card").scrollIntoView({ behavior:"smooth", block:"nearest" });
+    if (scroll) $("badge-card").scrollIntoView({ behavior:"smooth", block:"nearest" });
     chartMode = 0; updateTabs(0);
     setTimeout(() => drawBar(result), 60);
+  }
+
+  window.calc = function() {
+    if ($("btn-calc").disabled) return;
+    doCalc(true);
+  };
+
+  window.calcSilent = function() {
+    if ($("btn-calc").disabled) return;
+    doCalc(false);
   };
 
   // ═══════════════════════════════════════════════════════
