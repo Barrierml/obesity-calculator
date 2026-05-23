@@ -234,11 +234,6 @@
     const decimals = f==="WHR"?2 : f==="hba1c"||f==="TG"||f==="HDL_C"?1 : 0;
     $(f).value = dv.toFixed(decimals);
     checkAll();
-    if (!window._hardLimitBlocked) {
-      let allFilled = true;
-      for (const ff of FEATURES) { if ($(ff).value.trim()==="") { allFilled=false; break; } }
-      if (allFilled) window.calc();
-    }
   };
 
   function syncToSlider(f) {
