@@ -159,6 +159,7 @@
   const SLIDER = {
     SBP:[80,220,1], hba1c:[20,100,1], TG:[0.3,10,0.1], HDL_C:[0.3,3.5,0.05],
     Creatinine:[30,180,1], ALT:[5,150,1], Waist:[60,180,1], Hip:[60,180,1],
+    Height:[140,210,1], Weight:[40,200,1],
   };
   const UNIT_CONV = {
     hba1c:{"%":v=>(v-2.15)*10.929}, TG:{"mg/dL":v=>v/88.57}, HDL_C:{"mg/dL":v=>v/38.67}, Creatinine:{"mg/dL":v=>v*88.4},
@@ -294,6 +295,8 @@
   window.spinSBP = function(d) { window.spin("SBP", d); };
   window.spinWaist = function(d) { window.spin("Waist", d); };
   window.spinHip = function(d) { window.spin("Hip", d); };
+  window.spinHeight = function(d) { const el=$("Height"); const v=parseFloat(el.value)||170; el.value=Math.max(100,Math.min(250,(v+d*5).toFixed(1))); el.dispatchEvent(new Event("input",{bubbles:true})); window.calcBMI(); };
+  window.spinWeight = function(d) { const el=$("Weight"); const v=parseFloat(el.value)||95; el.value=Math.max(30,Math.min(300,(v+d*5).toFixed(1))); el.dispatchEvent(new Event("input",{bubbles:true})); window.calcBMI(); };
   window.fillDemo = function() {
     const patient = DEMOS[Math.floor(Math.random()*DEMOS.length)];
     const fields = ["SBP","hba1c","TG","HDL_C","Creatinine","ALT","Waist","Hip"];
