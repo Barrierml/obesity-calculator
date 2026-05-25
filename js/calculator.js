@@ -138,8 +138,8 @@
   const REQUIRED = ["SBP","hba1c","TG","HDL_C","Creatinine","ALT","Waist","Hip"];
   const CLASSES = [1,2,3,4,5];
   const COLORS = { 1:"#1f77b4", 2:"#9467bd", 3:"#d62728", 4:"#ff7f0e", 5:"#2ca02c" };
-  const NAME_EN = {1:"LRO — Low-risk obesity", 2:"RDO — Renal-dominant obesity", 3:"HGO — Hyperglycaemic obesity", 4:"HHO — High-HDL obesity", 5:"DHO — Dyslipidaemic–hepatic obesity"};
-  const NAME_ZH = {1:"LRO 低风险肥胖型", 2:"RDO 肾脏主导肥胖型", 3:"HGO 高血糖肥胖型", 4:"HHO 高HDL肥胖型", 5:"DHO 血脂异常-肝脏型"};
+  const NAME_EN = {1:"Low-risk obesity", 2:"Renal-dominant obesity", 3:"Hyperglycaemic obesity", 4:"High-HDL obesity", 5:"Dyslipidaemic–hepatic obesity"};
+  const NAME_ZH = {1:"低风险肥胖型", 2:"肾脏主导肥胖型", 3:"高血糖肥胖型", 4:"高HDL肥胖型", 5:"血脂异常-肝脏型"};
 
   const ZP = {
     SBP:{m:144.2617,s:18.30491}, hba1c:{m:38.28826,s:8.153269}, TG:{m:2.064591,s:1.058878},
@@ -311,8 +311,8 @@
     }
     window.calcWHR();
     const idx = DEMOS.indexOf(patient);
-    const zhNames = ["LRO 低风险肥胖","RDO 肾脏主导","HGO 高血糖","HHO 高HDL","DHO 血脂异常肝脏"];
-    const enNames = ["LRO Low-risk","RDO Renal-dominant","HGO Hyperglycaemic","HHO High-HDL","DHO Dyslipidaemic-hepatic"];
+    const zhNames = ["低风险肥胖","肾脏主导","高血糖","高HDL","血脂异常肝脏"];
+    const enNames = ["Low-risk obesity","Renal-dominant","Hyperglycaemic","High-HDL","Dyslipidaemic-hepatic"];
     const link = document.querySelector('[onclick="fillDemo()"]');
     if (link) {
       link.textContent = LANG==="zh"?`已填充：${zhNames[idx]} 样本`:`Filled: ${enNames[idx]} sample`;
