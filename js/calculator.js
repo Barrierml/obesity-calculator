@@ -14,6 +14,7 @@
       clearBtn: "Clear",
       label_SBP: "Systolic BP (SBP)",
       label_hba1c: "Glycated Hemoglobin (HbA1c)",
+      optionalLabel: "optional",
       label_TG: "Triglycerides (TG)",
       label_HDL_C: "HDL Cholesterol (HDL-C)",
       label_Creatinine: "Creatinine",
@@ -23,12 +24,14 @@
       label_WHR: "Waist-to-Hip Ratio (WHR)",
       label_Height: "Height",
       label_Weight: "Weight",
-      label_BMI: "Body Mass Index (BMI)",
+      label_BMI: "BMI",
       bodyTitle: "Body Parameters",
-      clearBMI: "Clear BMI",
+      clearBMI: "Clear",
       bmiWarn: "BMI is below 30. This model is only validated for individuals with BMI ≥ 30 kg/m².",
       ph_SBP: "e.g. 130",
       ph_hba1c: "e.g. 40",
+      ph_WHR: "Auto-calculated",
+      ph_BMI: "Auto-calculated",
       ph_TG: "e.g. 1.7",
       ph_HDL_C: "e.g. 1.3",
       ph_Creatinine: "e.g. 75",
@@ -57,12 +60,26 @@
       methStep3: "Softmax: P(Cₖ) = exp(scoreₖ) / Σ exp(scoreₗ)",
       methStep4: "Predicted subtype: argmax P(Cₖ)",
       methModel: "Model Information",
-      methM1: "Model: Multinomial Logistic Regression (L2 penalty / Ridge)",
+      methM1: "Model: Multinomial Ridge Regression",
       methM2: "Training: 88,877 UK Biobank participants (BMI ≥ 30)",
       methM3: "Features: 7 routine clinical variables + WHR auto-derived",
       methM4: "Validation: 5-fold CV, Macro-AUC ≈ 0.89",
       methM5: "Privacy: All computation runs locally in the browser",
       methCoeff: "Ridge Regression Coefficients",
+      tabCoeff: "Coefficients Table",
+      viewDefs: "View Subtype Definitions",
+      modalTitle: "Obesity Subtype Definitions",
+      lro_title: "LRO — Low-risk obesity",
+      lro_desc: "Features the most favorable metabolic profile among the subtypes. Biomarkers such as HbA1c, lipids, and liver/renal enzymes remain within or close to normal physiological ranges, indicating a \"metabolically healthy\" obesity phenotype with lower immediate cardiometabolic risk.",
+      rdo_title: "RDO — Renal-dominant obesity",
+      rdo_desc: "Primarily characterized by elevated serum creatinine levels relative to other clusters. This phenotype points towards early renal hemodynamic alterations, suggesting a higher baseline susceptibility to obesity-related nephropathy or chronic kidney disease (CKD).",
+      hgo_title: "HGO — Hyperglycaemic obesity",
+      hgo_desc: "Defined by markedly elevated HbA1c levels, reflecting severe insulin resistance and poor glycemic control. Patients in this cluster have the highest clinical overlap with prediabetes and overt type 2 diabetes mellitus.",
+      hho_title: "HHO — High-HDL obesity",
+      hho_desc: "A distinct phenotypic cluster maintaining paradoxically elevated levels of High-Density Lipoprotein Cholesterol (HDL-C) despite an obese state. While typical obesity is associated with low HDL-C, this subtype requires context-specific risk assessment.",
+      dho_title: "DHO — Dyslipidaemic–hepatic obesity",
+      dho_desc: "Characterised by elevated triglycerides (TG) and Alanine Transaminase (ALT), strongly suggesting hepatic involvement (such as MASLD/NAFLD) alongside systemic dyslipidaemia. HbA1c and blood pressure tend to be intermediate.",
+      tabDefs: "Subtype Definitions",
       methCoeffNote: "Interpretation: A positive β means the feature increases the log-odds of that subtype. HDL-C's large positive coefficient (95.41) for HHO reflects this subtype's defining characteristic of exceptionally high HDL cholesterol.",
       methRidge: "This model uses multinomial ridge regression (L2-regularized logistic regression). The L2 penalty shrinks extreme coefficients, improving generalizability. The optimal regularization parameter C was selected via 5-fold cross-validation.",
     },
@@ -74,6 +91,7 @@
       clearBtn: "清空",
       label_SBP: "收缩压 (SBP)",
       label_hba1c: "糖化血红蛋白 (HbA1c)",
+      optionalLabel: "可选",
       label_TG: "甘油三酯 (TG)",
       label_HDL_C: "高密度脂蛋白胆固醇 (HDL-C)",
       label_Creatinine: "肌酐 (Creatinine)",
@@ -83,12 +101,14 @@
       label_WHR: "腰臀比 (WHR)",
       label_Height: "身高",
       label_Weight: "体重",
-      label_BMI: "身体质量指数 (BMI)",
+      label_BMI: "BMI",
       bodyTitle: "体格参数",
-      clearBMI: "清空BMI",
+      clearBMI: "清空",
       bmiWarn: "BMI 低于 30。本模型仅适用于 BMI ≥ 30 kg/m² 的个体。",
       ph_SBP: "例如 130",
       ph_hba1c: "例如 40",
+      ph_WHR: "自动计算",
+      ph_BMI: "自动计算",
       ph_TG: "例如 1.7",
       ph_HDL_C: "例如 1.3",
       ph_Creatinine: "例如 75",
@@ -117,12 +137,26 @@
       methStep3: "Softmax：P(Cₖ) = exp(scoreₖ) / Σ exp(scoreₗ)",
       methStep4: "预测亚型 = argmax P(Cₖ)",
       methModel: "模型信息",
-      methM1: "模型：Multinomial Logistic Regression（L2 正则化 / Ridge）",
+      methM1: "模型：多重Ridge回归",
       methM2: "训练样本：88,877 名 UK Biobank 参与者（BMI ≥ 30）",
       methM3: "特征：7 项临床指标 + WHR 自动推算",
       methM4: "验证：5 折交叉验证，Macro-AUC ≈ 0.89",
       methM5: "隐私：所有计算在浏览器本地完成",
       methCoeff: "Ridge 回归系数",
+      tabCoeff: "系数表",
+      viewDefs: "查看亚型定义",
+      modalTitle: "肥胖亚型定义",
+      lro_title: "LRO — 低风险型肥胖",
+      lro_desc: "在所有亚型中具有最良好的代谢特征。糖化血红蛋白（HbA1c）、血脂以及肝肾功能酶类等生物标志物保持在正常或接近正常的生理范围内，代表\"代谢健康型肥胖\"表型，短期内核心代谢及心血管疾病的发生风险较低。",
+      rdo_title: "RDO — 肾脏主导型肥胖",
+      rdo_desc: "主要特征为血清肌酐（Creatinine）水平相对其他亚型显著升高。该表型提示早期肾脏血液动力学改变，意味着患者对肥胖相关肾病或慢性肾脏病（CKD）具有更高的临床易感性。",
+      hgo_title: "HGO — 高血糖型肥胖",
+      hgo_desc: "以显著升高的糖化血红蛋白（HbA1c）水平为核心特征，反映了严重的胰岛素抵抗和不良的血糖控制。该亚型患者在临床上与糖尿病前期及确诊的 2 型糖尿病重叠度最高。",
+      hho_title: "HHO — 高HDL型肥胖",
+      hho_desc: "一种独特的临床表型，尽管患者处于肥胖状态，但仍维持异常高水平的高密度脂蛋白胆固醇（HDL-C）。由于典型肥胖通常伴随低 HDL-C，该特殊亚型需结合特定的遗传或代谢背景进行个体化评估。",
+      dho_title: "DHO — 血脂异常-肝脏型肥胖",
+      dho_desc: "以甘油三酯（TG）和谷丙转氨酶（ALT）显著升高为显著特征，强烈提示伴有早期肝脏受累（如代谢相关脂肪性肝病 MASLD/NAFLD）以及全身性血脂异常。其糖化血红蛋白和血压水平通常表现为中度异常。",
+      tabDefs: "亚型定义",
       methCoeffNote: "解读：正系数表示该特征增加相应亚型的对数几率。HDL-C 在 HHO 亚型上的极大正系数 (95.41) 反映了该亚型以极高 HDL 胆固醇为核心特征。",
       methRidge: "本模型采用多项 Ridge 回归（L2 正则化逻辑回归）。L2 惩罚项收缩极端系数，提高泛化能力。最优正则化参数 C 通过 5 折交叉验证选择。",
     },
@@ -166,11 +200,11 @@
     hba1c:{"%":v=>v/10.929+2.15}, TG:{"mg/dL":v=>v*88.57}, HDL_C:{"mg/dL":v=>v*38.67}, Creatinine:{"mg/dL":v=>v/88.4},
   };
   const DEMOS = [
-    { SBP:132, hba1c:36.2, TG:0.836, HDL_C:1.610, Creatinine:69.1, ALT:24.6, Waist:92, Hip:103 },
-    { SBP:159, hba1c:38.2, TG:1.461, HDL_C:1.940, Creatinine:84.9, ALT:57.7, Waist:108, Hip:109 },
-    { SBP:109, hba1c:49.8, TG:3.571, HDL_C:1.110, Creatinine:84.2, ALT:22.8, Waist:105, Hip:116 },
-    { SBP:129, hba1c:41.9, TG:0.809, HDL_C:2.540, Creatinine:86.9, ALT:17.2, Waist:98, Hip:97 },
-    { SBP:152, hba1c:39.4, TG:2.844, HDL_C:1.590, Creatinine:67.5, ALT:30.9, Waist:106, Hip:98 },
+    { SBP:135, hba1c:42, TG:1.8, HDL_C:1.6, Creatinine:70, ALT:45, Waist:92, Hip:100 },   // LRO 53% + DHO 42% + RDO 5%
+    { SBP:120, hba1c:55, TG:1.6, HDL_C:1.2, Creatinine:100, ALT:15, Waist:82, Hip:100 },   // RDO 62% + HGO 30% + LRO 8%
+    { SBP:120, hba1c:55, TG:0.8, HDL_C:1.2, Creatinine:100, ALT:25, Waist:82, Hip:100 },   // HGO 63% + RDO 32% + LRO 5%
+    { SBP:105, hba1c:40, TG:1.8, HDL_C:2.2, Creatinine:65, ALT:35, Waist:98, Hip:100 },   // HHO 39% + LRO 34% + RDO 26%
+    { SBP:120, hba1c:50, TG:3.5, HDL_C:1.8, Creatinine:60, ALT:35, Waist:85, Hip:100 },   // DHO 46% + HGO 33% + LRO 22%
   ];
 
   // ═══════════ State ═══════════
@@ -415,6 +449,21 @@
   }
   window.switchToChart = function(mode) { if(!lastResult)return; chartMode=mode; updateTabs(mode); if(mode===0)drawBar(lastResult); else if(mode===1)drawRadar(lastResult); else showTable(lastResult); };
   window.switchChart = function(dir) { if(!lastResult)return; chartMode=(chartMode+dir+3)%3; updateTabs(chartMode); if(chartMode===0)drawBar(lastResult); else if(chartMode===1)drawRadar(lastResult); else showTable(lastResult); };
+
+  // ═══════════ Coeff / Defs Tab Switcher ═══════════
+  window.switchCoeffTab = function(mode) {
+    const cp = document.getElementById("coeff-panel");
+    const dp = document.getElementById("defs-panel");
+    if (cp) cp.classList.toggle("hidden", mode !== 0);
+    if (dp) dp.classList.toggle("hidden", mode !== 1);
+    ["tab-coeff","tab-defs"].forEach((id,i) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.className = i === mode
+        ? "px-4 py-1.5 rounded-lg text-xs font-semibold bg-navy-700 text-white transition-colors"
+        : "px-4 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-muted hover:bg-slate-200 transition-colors";
+    });
+  };
 
   // ═══════════ Init ═══════════
   document.addEventListener("DOMContentLoaded",()=>{
