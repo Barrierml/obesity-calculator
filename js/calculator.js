@@ -53,6 +53,29 @@
       probability: "Probability",
       score: "Score",
       disclaimer: "Note: This calculator is designed for obesity subtyping among individuals with a BMI ≥ 30 kg/m². If your BMI is unknown, please use the BMI calculator below. The model uses multinomial ridge regression trained on UK Biobank data (N=88,877). All input data is processed locally and never uploaded.",
+      batchTitle: "Batch CSV Prediction",
+      batchDesc: "Upload a CSV with ID and seven raw UKB-unit indicators. The browser will generate a two-column result CSV locally.",
+      batchInput: "Input: ID, SBP, HbA1c, TG, HDL-C, Creatinine, ALT, WHR",
+      batchOutput: "Output: ID, subtype",
+      viewExampleInput: "View example input",
+      viewExampleOutput: "View example output",
+      batchGuide: "Input guide",
+      exampleInputTitle: "Example input CSV",
+      exampleOutputTitle: "Example output CSV",
+      batchGuideTitle: "CSV input guide",
+      uploadCsv: "Upload CSV",
+      dropTitle: "Drop CSV here",
+      dropHint: "or click to choose a file",
+      batchStatusIdle: "No CSV selected.",
+      batchStatusWorking: "Processing CSV locally...",
+      batchStatusReady: "Processed {n} rows. Preview or download the result.",
+      batchStatusError: "CSV error: {msg}",
+      previewResult: "Preview result",
+      downloadResult: "Download result CSV",
+      clearBatch: "Clear CSV",
+      resultPreviewTitle: "Prediction result preview",
+      batchMissingColumns: "missing required columns: {cols}",
+      batchInvalidValue: "invalid or missing value at row {row}, column {col}",
       methTitle: "Methodology",
       methFlow: "Calculation Steps",
       methStep1: "Z-score normalization: z = (x − μ) / σ using UKB population parameters",
@@ -141,6 +164,29 @@
       probability: "概率",
       score: "得分",
       disclaimer: "注：本计算器适用于 BMI ≥ 30 kg/m² 的肥胖个体亚型分型。如未知 BMI，请使用下方 BMI 计算器。模型基于 UK Biobank 数据（N=88,877）的多项 Ridge 回归。所有数据仅在浏览器本地计算，不会上传。",
+      batchTitle: "批量 CSV 预测",
+      batchDesc: "上传一个包含 ID 和 7 个 UKB 单位原始指标的 CSV，浏览器会在本地生成两列结果 CSV。",
+      batchInput: "输入：ID, SBP, HbA1c, TG, HDL-C, Creatinine, ALT, WHR",
+      batchOutput: "输出：ID, subtype",
+      viewExampleInput: "查看示例输入",
+      viewExampleOutput: "查看示例输出",
+      batchGuide: "指标说明",
+      exampleInputTitle: "示例输入 CSV",
+      exampleOutputTitle: "示例输出 CSV",
+      batchGuideTitle: "CSV 输入指标说明",
+      uploadCsv: "上传 CSV",
+      dropTitle: "拖拽 CSV 到这里",
+      dropHint: "或点击选择文件",
+      batchStatusIdle: "尚未选择 CSV。",
+      batchStatusWorking: "正在本地处理 CSV...",
+      batchStatusReady: "已处理 {n} 行。可预览或下载结果。",
+      batchStatusError: "CSV 错误：{msg}",
+      previewResult: "预览结果",
+      downloadResult: "下载结果 CSV",
+      clearBatch: "清空 CSV",
+      resultPreviewTitle: "预测结果预览",
+      batchMissingColumns: "缺少必需列：{cols}",
+      batchInvalidValue: "第 {row} 行的 {col} 列缺失或不是有效数值",
       methTitle: "方法学说明",
       methFlow: "计算流程",
       methStep1: "Z-score 标准化：z = (x − μ) / σ（使用 UKB 总体参数）",
@@ -196,15 +242,15 @@
   const NAME_ZH = {1:"低风险肥胖型", 2:"肾脏主导肥胖型", 3:"高血糖肥胖型", 4:"高HDL肥胖型", 5:"血脂异常-肝脏型"};
 
   const ZP = {
-    SBP:{m:144.2617,s:18.30491}, hba1c:{m:38.28826,s:8.153269}, TG:{m:2.064591,s:1.058878},
-    HDL_C:{m:1.776623,s:0.6932231}, Creatinine:{m:74.68174,s:15.22417}, ALT:{m:29.05090,s:15.12455}, WHR:{m:0.9289015,s:0.08659783},
+    SBP:{m:144.261698752208,s:18.3049127093897}, hba1c:{m:38.288260179799,s:8.15326894473964}, TG:{m:2.06459139619924,s:1.05887835734525},
+    HDL_C:{m:1.77662319835278,s:0.693223111946496}, Creatinine:{m:74.6817388075655,s:15.2241707689751}, ALT:{m:29.0509011892841,s:15.1245458778404}, WHR:{m:0.928901505744505,s:0.0865978339462485},
   };
   const COEF = [
-    { int:57.94731,SBP:-12.03,hba1c:-36.61,TG:-29.20,HDL_C:-36.22,Creatinine:-38.03,ALT:-36.85,WHR:-59.00},
-    { int:82.50954,SBP:5.62,hba1c:-30.49,TG:-14.97,HDL_C:-22.69,Creatinine:34.37,ALT:-20.96,WHR:20.39},
-    { int:-135.87760,SBP:1.99,hba1c:130.82,TG:8.31,HDL_C:-13.29,Creatinine:-10.91,ALT:7.80,WHR:18.64},
-    { int:-19.34153,SBP:-1.90,hba1c:-36.16,TG:-25.74,HDL_C:95.41,Creatinine:13.91,ALT:-1.78,WHR:6.79},
-    { int:14.76227,SBP:6.32,hba1c:-27.57,TG:61.60,HDL_C:-23.21,Creatinine:0.66,ALT:51.78,WHR:13.18},
+    { int:57.947312955068654,SBP:-12.025405717991879,hba1c:-36.60881861339705,TG:-29.20267115488223,HDL_C:-36.2232507437771,Creatinine:-38.02660114786002,ALT:-36.847810416677795,WHR:-59.00487481571789},
+    { int:82.50954354804371,SBP:5.6192209478167445,hba1c:-30.490652841350098,TG:-14.966818415046827,HDL_C:-22.689264643192285,Creatinine:34.3698240517385,ALT:-20.956522168114848,WHR:20.393969704570694},
+    { int:-135.87759846126272,SBP:1.9900636482202922,hba1c:130.82260090566632,TG:8.30944162635771,HDL_C:-13.28729324615973,Creatinine:-10.912543321264138,ALT:7.804344085354792,WHR:18.64301103000144},
+    { int:-19.341530392691297,SBP:-1.904640008886198,hba1c:-36.15733020669558,TG:-25.73974623114728,HDL_C:95.41181951326253,Creatinine:13.909462630886257,ALT:-1.7751551540675148,WHR:6.785899215987084},
+    { int:14.762272350752943,SBP:6.320761130840697,hba1c:-27.565799244221648,TG:61.599794174721936,HDL_C:-23.2120108801449,Creatinine:0.6598577864945157,ALT:51.77514365350848,WHR:13.181994865158394},
   ];
   const HARD = {
     SBP:[50,300], hba1c:[15,200], TG:[0.1,100], HDL_C:[0.1,5], Creatinine:[10,2000], ALT:[1,10000], WHR:[0.5,1.5],
@@ -232,6 +278,8 @@
   // ═══════════ State ═══════════
   const $ = id => document.getElementById(id);
   let probChart = null, chartMode = 0, lastResult = null;
+  let lastBatchOutput = "";
+  let lastBatchN = 0;
 
   // ═══════════ Helpers ═══════════
   function toNative(f, raw) {
@@ -239,12 +287,24 @@
     const sel = $(f+"-unit"); if (!sel||sel.value==="native") return v;
     return (UNIT_CONV[f]?.[sel.value]||(x=>x))(v);
   }
+  function displayDecimals(f, unit) {
+    if (unit && unit !== "native") return 2;
+    if (f === "TG" || f === "HDL_C") return 2;
+    if (f === "WHR") return 4;
+    return 1;
+  }
 
   // ═══════════ Auto-calc WHR & BMI ═══════════
   window.calcWHR = function() {
     const w = parseFloat($("Waist").value), h = parseFloat($("Hip").value);
-    if (!isNaN(w) && !isNaN(h) && h > 0) $("WHR").value = (w/h).toFixed(4);
-    else $("WHR").value = "";
+    if (!isNaN(w) && !isNaN(h) && h > 0) {
+      const whr = w / h;
+      $("WHR").dataset.raw = String(whr);
+      $("WHR").value = whr.toFixed(4);
+    } else {
+      $("WHR").dataset.raw = "";
+      $("WHR").value = "";
+    }
     checkAll();
   };
   window.calcBMI = function() {
@@ -272,6 +332,278 @@
     return CLASSES.map((c,i)=>({cluster:c, prob:exps[i]/sum, score:scores[i]}));
   }
 
+  // ═══════════ Batch CSV ═══════════
+  const BATCH_ALIASES = {
+    ID:["ID","id","eid","EID"],
+    SBP:["SBP","sbp"],
+    hba1c:["HbA1c","hba1c","HBA1C"],
+    TG:["TG","tg","Triglycerides"],
+    HDL_C:["HDL-C","HDL_C","HDL","hdl_c","hdl"],
+    Creatinine:["Creatinine","creatinine"],
+    ALT:["ALT","alt"],
+    WHR:["WHR","whr"],
+  };
+  const SUBTYPE_CODE = {1:"LRO", 2:"RDO", 3:"HGO", 4:"HHO", 5:"DHO"};
+
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], cell = "", quoted = false;
+    const normalized = text.replace(/^\uFEFF/, "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    for (let i=0; i<normalized.length; i++) {
+      const ch = normalized[i], next = normalized[i+1];
+      if (quoted) {
+        if (ch === '"' && next === '"') { cell += '"'; i++; }
+        else if (ch === '"') quoted = false;
+        else cell += ch;
+      } else if (ch === '"') {
+        quoted = true;
+      } else if (ch === ",") {
+        row.push(cell); cell = "";
+      } else if (ch === "\n") {
+        row.push(cell);
+        if (row.some(v=>v.trim() !== "")) rows.push(row);
+        row = []; cell = "";
+      } else {
+        cell += ch;
+      }
+    }
+    row.push(cell);
+    if (row.some(v=>v.trim() !== "")) rows.push(row);
+    return rows;
+  }
+
+  function csvEscape(value) {
+    const s = String(value ?? "");
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
+
+  function htmlEscape(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function findColumn(headers, aliases) {
+    for (const alias of aliases) {
+      const idx = headers.indexOf(alias);
+      if (idx !== -1) return idx;
+    }
+    return -1;
+  }
+
+  function formatMsg(key, values) {
+    let msg = t(key);
+    for (const [name, value] of Object.entries(values || {})) {
+      msg = msg.replace(`{${name}}`, value);
+    }
+    return msg;
+  }
+
+  function setBatchStatus(key, values, isError) {
+    const el = $("batch-status");
+    if (!el) return;
+    el.textContent = formatMsg(key, values);
+    el.className = isError ? "mt-3 text-xs text-red-600" : "mt-3 text-xs text-slate-400";
+  }
+
+  function showBatchActions(show) {
+    const actions = $("batch-actions");
+    if (actions) actions.classList.toggle("hidden", !show);
+  }
+
+  function buildBatchOutput(text) {
+    const rows = parseCSV(text);
+    if (rows.length < 2) throw new Error("empty CSV");
+    const headers = rows[0].map(h=>h.trim());
+    const col = {};
+    for (const key of ["ID", ...FEATURES]) {
+      const idx = findColumn(headers, BATCH_ALIASES[key]);
+      if (idx === -1) col[key] = -1;
+      else col[key] = idx;
+    }
+    const missing = Object.entries(col).filter(([,idx])=>idx === -1).map(([key])=>BATCH_ALIASES[key][0]);
+    if (missing.length) throw new Error(formatMsg("batchMissingColumns", { cols: missing.join(", ") }));
+
+    const out = [["ID","subtype"]];
+    for (let r=1; r<rows.length; r++) {
+      const input = rows[r];
+      const vals = {};
+      for (const f of FEATURES) {
+        const raw = (input[col[f]] ?? "").trim();
+        const value = Number(raw);
+        if (raw === "" || !Number.isFinite(value)) {
+          throw new Error(formatMsg("batchInvalidValue", { row: r + 1, col: BATCH_ALIASES[f][0] }));
+        }
+        vals[f] = value;
+      }
+      const result = predict(vals);
+      const best = result.reduce((a,b)=>a.prob>b.prob?a:b);
+      out.push([input[col.ID] ?? "", SUBTYPE_CODE[best.cluster]]);
+    }
+    return out.map(row=>row.map(csvEscape).join(",")).join("\n") + "\n";
+  }
+
+  function downloadText(filename, text) {
+    const blob = new Blob([text], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  }
+
+  function csvRowsToTable(rows) {
+    if (!rows.length) return `<p class="p-4 text-sm text-slate-500">Empty CSV</p>`;
+    const headers = rows[0];
+    const body = rows.slice(1);
+    const head = headers.map(h=>`<th class="sticky top-0 bg-slate-50 px-3 py-2 text-left text-xs font-semibold text-slate-600 border-b border-slate-100">${htmlEscape(h)}</th>`).join("");
+    const bodyRows = body.map(row=>`<tr class="odd:bg-white even:bg-slate-50/50">${headers.map((_,i)=>`<td class="px-3 py-2 text-xs text-slate-600 border-b border-slate-50 whitespace-nowrap">${htmlEscape(row[i] ?? "")}</td>`).join("")}</tr>`).join("");
+    return `<table class="w-full border-collapse"><thead><tr>${head}</tr></thead><tbody>${bodyRows}</tbody></table>`;
+  }
+
+  async function loadExampleCsv(kind) {
+    if (window.EXAMPLE_CSV?.[kind]) return window.EXAMPLE_CSV[kind];
+    const path = kind === "output" ? "examples/example_output.csv" : "examples/example_input.csv";
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`failed to load ${path}`);
+    return response.text();
+  }
+
+  window.showExampleCsv = async function(kind) {
+    const modal = $("example-csv-modal");
+    const title = $("example-csv-title");
+    const table = $("example-csv-table");
+    if (!modal || !title || !table) return;
+    title.textContent = t(kind === "output" ? "exampleOutputTitle" : "exampleInputTitle");
+    title.dataset.kind = kind;
+    table.innerHTML = `<p class="p-4 text-sm text-slate-500">${t("batchStatusWorking")}</p>`;
+    modal.showModal();
+    try {
+      const text = await loadExampleCsv(kind);
+      table.innerHTML = csvRowsToTable(parseCSV(text));
+    } catch (err) {
+      table.innerHTML = `<p class="p-4 text-sm text-red-600">${htmlEscape(err.message || String(err))}</p>`;
+    }
+  };
+
+  window.showBatchGuide = function() {
+    const modal = $("example-csv-modal");
+    const title = $("example-csv-title");
+    const table = $("example-csv-table");
+    if (!modal || !title || !table) return;
+    title.textContent = t("batchGuideTitle");
+    title.dataset.kind = "guide";
+    const headers = LANG === "zh"
+      ? ["CSV 列名", "含义", "单位", "可接受范围", "备注"]
+      : ["CSV column", "Meaning", "Unit", "Accepted range", "Notes"];
+    const rows = LANG === "zh" ? [
+      ["ID", "样本或个体编号", "文本或数字", "不能为空", "输出表会原样保留该 ID"],
+      ["SBP", "收缩压", "mmHg", "50 - 300", "请输入原始测量值，不要输入 z-score"],
+      ["HbA1c", "糖化血红蛋白", "mmol/mol", "15 - 200", "批量 CSV 只接受 mmol/mol；单人计算器可切换百分比"],
+      ["TG", "甘油三酯", "mmol/L", "0.1 - 100", "批量 CSV 只接受 mmol/L"],
+      ["HDL-C", "高密度脂蛋白胆固醇", "mmol/L", "0.1 - 5", "列名也可写 HDL_C"],
+      ["Creatinine", "肌酐", "umol/L", "10 - 2000", "批量 CSV 只接受 umol/L"],
+      ["ALT", "谷丙转氨酶", "U/L", "1 - 10000", "请输入原始酶活性数值"],
+      ["WHR", "腰臀比", "ratio", "0.5 - 1.5", "WHR = 腰围 / 臀围；批量 CSV 需要直接提供 WHR"],
+    ] : [
+      ["ID", "Sample or participant identifier", "text or number", "Required", "The same ID is preserved in the output"],
+      ["SBP", "Systolic blood pressure", "mmHg", "50 - 300", "Use raw measurements, not z-scores"],
+      ["HbA1c", "Glycated hemoglobin", "mmol/mol", "15 - 200", "Batch CSV accepts mmol/mol only; the single calculator can convert from %"],
+      ["TG", "Triglycerides", "mmol/L", "0.1 - 100", "Batch CSV accepts mmol/L only"],
+      ["HDL-C", "HDL cholesterol", "mmol/L", "0.1 - 5", "HDL_C is also accepted as a column name"],
+      ["Creatinine", "Creatinine", "umol/L", "10 - 2000", "Batch CSV accepts umol/L only"],
+      ["ALT", "Alanine transaminase", "U/L", "1 - 10000", "Use the raw enzyme value"],
+      ["WHR", "Waist-to-hip ratio", "ratio", "0.5 - 1.5", "WHR = waist / hip; batch CSV should provide WHR directly"],
+    ];
+    const note = LANG === "zh"
+      ? "适用范围：本模型用于 BMI ≥ 30 kg/m² 的肥胖个体亚型预测。所有 CSV 指标都应为原始单位数值，不应上传标准化后的 z-score。"
+      : "Applicability: this model is intended for obesity subtyping among individuals with BMI >= 30 kg/m². CSV inputs should be raw-unit values, not standardized z-scores.";
+    table.innerHTML = `${csvRowsToTable([headers, ...rows])}<p class="px-4 py-3 text-xs leading-relaxed text-slate-500 border-t border-slate-100">${htmlEscape(note)}</p>`;
+    modal.showModal();
+  };
+
+  window.handleBatchCsv = function(file) {
+    if (!file) return;
+    lastBatchOutput = "";
+    lastBatchN = 0;
+    showBatchActions(false);
+    setBatchStatus("batchStatusWorking");
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const output = buildBatchOutput(String(reader.result || ""));
+        const n = Math.max(0, output.trim().split("\n").length - 1);
+        lastBatchOutput = output;
+        lastBatchN = n;
+        showBatchActions(true);
+        setBatchStatus("batchStatusReady", { n });
+      } catch (err) {
+        showBatchActions(false);
+        setBatchStatus("batchStatusError", { msg: err.message || String(err) }, true);
+      }
+    };
+    reader.onerror = () => setBatchStatus("batchStatusError", { msg: "failed to read file" }, true);
+    reader.readAsText(file);
+  };
+
+  window.previewBatchResult = function() {
+    if (!lastBatchOutput) return;
+    const modal = $("example-csv-modal");
+    const title = $("example-csv-title");
+    const table = $("example-csv-table");
+    if (!modal || !title || !table) return;
+    title.textContent = t("resultPreviewTitle");
+    title.dataset.kind = "result";
+    table.innerHTML = csvRowsToTable(parseCSV(lastBatchOutput));
+    modal.showModal();
+  };
+
+  window.downloadBatchResult = function() {
+    if (!lastBatchOutput) return;
+    downloadText("subtype_predictions.csv", lastBatchOutput);
+  };
+
+  window.clearBatchCsv = function() {
+    lastBatchOutput = "";
+    lastBatchN = 0;
+    const input = $("batch-csv-input");
+    if (input) input.value = "";
+    showBatchActions(false);
+    setBatchStatus("batchStatusIdle");
+    const modal = $("example-csv-modal");
+    const title = $("example-csv-title");
+    if (modal?.open && title?.dataset.kind === "result") modal.close();
+  };
+
+  function setupBatchDropZone() {
+    const zone = $("batch-drop-zone");
+    if (!zone) return;
+    const activeClass = ["border-navy-700/50","bg-blue-50"];
+    const setActive = active => activeClass.forEach(cls=>zone.classList.toggle(cls, active));
+    ["dragenter","dragover"].forEach(eventName => {
+      zone.addEventListener(eventName, event => {
+        event.preventDefault();
+        setActive(true);
+      });
+    });
+    ["dragleave","dragend","drop"].forEach(eventName => {
+      zone.addEventListener(eventName, event => {
+        event.preventDefault();
+        setActive(false);
+      });
+    });
+    zone.addEventListener("drop", event => {
+      const file = event.dataTransfer?.files?.[0];
+      if (file) window.handleBatchCsv(file);
+    });
+  }
+
   // ═══════════ Slider sync ═══════════
   function sliderValToDisplay(f, sv) {
     const sel = $(f+"-unit"), unit = (sel&&sel.value!=="native")?sel.value:null;
@@ -280,7 +612,8 @@
   window.syncFromSlider = function(f) {
     const slider = $(f+"-slider"), nv = parseFloat(slider.value);
     const dv = sliderValToDisplay(f, nv);
-    const dec = f==="WHR"?4:f==="hba1c"||f==="TG"||f==="HDL_C"?1:0;
+    const sel = $(f+"-unit");
+    const dec = displayDecimals(f, sel?.value || "native");
     $(f).value = dv.toFixed(dec);
     checkAll();
     if (!window._hardLimitBlocked && !$("btn-calc").disabled) window.calcSilent();
@@ -327,7 +660,7 @@
     const el=$(f), raw=el.value.trim(); if(raw==="")return;
     const nv=toNative(f,raw); if(isNaN(nv))return;
     const sel=$(f+"-unit"); if(!sel)return;
-    el.value = (sel.value==="native"?nv:(UNIT_REV[f]?.[sel.value]||(x=>x))(nv)).toFixed(sel.value==="native"?(f==="Creatinine"||f==="SBP"||f==="ALT"?0:1):2);
+    el.value = (sel.value==="native"?nv:(UNIT_REV[f]?.[sel.value]||(x=>x))(nv)).toFixed(displayDecimals(f, sel.value));
     checkAll();
   };
 
@@ -335,12 +668,12 @@
   window.spin = function(f, delta) {
     const el = $(f), raw = el.value.trim();
     const nv = raw === "" ? (ZP[f]?ZP[f].m:100) : (toNative(f, raw) || 0);
-    const step = { SBP:5, hba1c:2, TG:0.1, HDL_C:0.05, Creatinine:5, ALT:5, Waist:5, Hip:5 }[f] || 1;
+    const step = { SBP:0.1, hba1c:0.1, TG:0.01, HDL_C:0.01, Creatinine:0.1, ALT:0.1, Waist:0.1, Hip:0.1 }[f] || 0.1;
     const lim = HARD[f] || [0,9999];
     const newNative = Math.max(lim[0], Math.min(lim[1], nv + delta * step));
     const sel = $(f+"-unit"); const unit = (sel && sel.value !== "native") ? sel.value : null;
     const displayVal = (unit && UNIT_REV[f]?.[unit]) ? UNIT_REV[f][unit](newNative) : newNative;
-    const decimals = f==="WHR"?4 : f==="hba1c"||f==="TG"||f==="HDL_C"?1 : 0;
+    const decimals = displayDecimals(f, unit || "native");
     el.value = displayVal.toFixed(decimals);
     syncToSlider(f);
     el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -377,7 +710,7 @@
   };
   window.clearAll = function() {
     for (const f of REQUIRED) { $(f).value=""; clearWarn($(f).closest(".input-group")); }
-    $("WHR").value=""; $("bmi-warn").classList.add("hidden");
+    $("WHR").value=""; $("WHR").dataset.raw=""; $("bmi-warn").classList.add("hidden");
     if(probChart){probChart.destroy();probChart=null;}
     lastResult=null; $("results-area").classList.add("hidden");
     checkAll();
@@ -403,6 +736,11 @@
     const tb=$("tab-bar"); if(tb)tb.textContent=LANG==="zh"?"柱状图":"Bar Chart";
     const tr=$("tab-radar"); if(tr)tr.textContent=LANG==="zh"?"雷达图":"Radar";
     const tt=$("tab-table"); if(tt)tt.textContent=t("viewScores");
+    const exampleTitle = $("example-csv-title");
+    if (exampleTitle && $("example-csv-modal")?.open) {
+      const kind = exampleTitle.dataset.kind;
+      exampleTitle.textContent = kind === "result" ? t("resultPreviewTitle") : t(kind === "guide" ? "batchGuideTitle" : kind === "output" ? "exampleOutputTitle" : "exampleInputTitle");
+    }
     if(lastResult) {
       const best=lastResult.reduce((a,b)=>a.prob>b.prob?a:b);
       const sorted=[...lastResult].sort((a,b)=>b.prob-a.prob); const margin=sorted[0].prob-sorted[1].prob;
@@ -415,7 +753,7 @@
   function doCalc(scroll) {
     const vals = {};
     for (const f of FEATURES) {
-      if (f==="WHR") { vals[f]=parseFloat($("WHR").value)||0; continue; }
+      if (f==="WHR") { vals[f]=parseFloat($("WHR").dataset.raw || $("WHR").value)||0; continue; }
       vals[f]=toNative(f,$(f).value);
     }
     const result = predict(vals);
@@ -493,6 +831,9 @@
     for(const f of FEATURES) { const el=$(f); if(el)el.addEventListener("keydown",e=>{if(e.key==="Enter")window.calc();}); }
     $("Waist").addEventListener("input",window.calcWHR); $("Hip").addEventListener("input",window.calcWHR);
     $("Height").addEventListener("input",window.calcBMI); $("Weight").addEventListener("input",window.calcBMI);
+    const batchInput = $("batch-csv-input");
+    if (batchInput) batchInput.addEventListener("change", e=>window.handleBatchCsv(e.target.files?.[0]));
+    setupBatchDropZone();
     checkAll();
   });
 })();
