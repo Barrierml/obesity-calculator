@@ -116,6 +116,7 @@
       licenseNC: "NC = NonCommercial — You may not use the material for commercial purposes.",
       licenseND: "ND = NoDerivatives — If you remix, transform, or build upon the material, you may not distribute the modified material.",
       licenseFullTerms: 'For the full licence terms, please visit: <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-navy-700 underline underline-offset-2">https://creativecommons.org/licenses/by-nc-nd/4.0/</a>.',
+      licenseResearchDisclaimer: "This webtool is intended for research use only and is not designed or validated for clinical diagnosis, treatment decisions or individual medical risk assessment. If you have any health concerns or clinical conditions, please consult a qualified healthcare professional and follow medical advice.",
     },
     zh: {
       title: "肥胖亚型预测计算器",
@@ -227,6 +228,7 @@
       licenseNC: "NC = 非商业性使用 — 您不得将本材料用于商业目的。",
       licenseND: "ND = 禁止演绎 — 如果您对本材料进行再混合、转换或基于本材料进行创作，您不得分发修改后的材料。",
       licenseFullTerms: '完整许可条款请访问：<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-navy-700 underline underline-offset-2">https://creativecommons.org/licenses/by-nc-nd/4.0/</a>。',
+      licenseResearchDisclaimer: "本网页工具仅供研究使用，并非为临床诊断、治疗决策或个人医学风险评估而设计，也未经过相应用途验证。如您有任何健康疑虑或临床疾病，请咨询合格的医疗专业人员并遵循医学建议。",
     },
   };
 
