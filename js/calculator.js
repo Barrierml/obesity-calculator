@@ -22,6 +22,8 @@
       label_Waist: "Waist circumference",
       label_Hip: "Hip circumference",
       label_WHR: "Waist-to-Hip Ratio (WHR)",
+      whrModeAuto: "Auto",
+      whrModeManual: "Direct",
       label_Height: "Height",
       label_Weight: "Weight",
       label_BMI: "BMI",
@@ -31,6 +33,7 @@
       ph_SBP: "e.g. 130",
       ph_hba1c: "e.g. 40",
       ph_WHR: "Auto-calculated",
+      ph_WHR_manual: "e.g. 0.92",
       ph_BMI: "Auto-calculated",
       ph_TG: "e.g. 1.7",
       ph_HDL_C: "e.g. 1.3",
@@ -43,6 +46,7 @@
       hardLimitMsg: "Value exceeds human physiological range. Please verify.",
       softWarnMsg: "Value deviates from model training distribution. Interpret with caution.",
       fillHint: "Please complete all required fields above. WHR will be calculated automatically.",
+      fillHintManual: "Please complete all required fields above, including WHR.",
       btnCalc: "Calculate",
       predictedSubtype: "Predicted Subtype",
       confidence: "Confidence",
@@ -134,6 +138,8 @@
       label_Waist: "腰围",
       label_Hip: "臀围",
       label_WHR: "腰臀比 (WHR)",
+      whrModeAuto: "自动",
+      whrModeManual: "直接输入",
       label_Height: "身高",
       label_Weight: "体重",
       label_BMI: "BMI",
@@ -143,6 +149,7 @@
       ph_SBP: "例如 130",
       ph_hba1c: "例如 40",
       ph_WHR: "自动计算",
+      ph_WHR_manual: "例如 0.92",
       ph_BMI: "自动计算",
       ph_TG: "例如 1.7",
       ph_HDL_C: "例如 1.3",
@@ -155,6 +162,7 @@
       hardLimitMsg: "数值超出人类常规生理极限，请核对输入是否有误。",
       softWarnMsg: "该数值偏离模型训练分布，结果仅供参考。",
       fillHint: "请完整填写上方所需指标。WHR 将自动计算。",
+      fillHintManual: "请完整填写上方所需指标，包括 WHR。",
       btnCalc: "计算结果",
       predictedSubtype: "预测亚型",
       confidence: "置信度",
@@ -237,7 +245,7 @@
 
   // ═══════════ Constants ═══════════
   const FEATURES = ["SBP","hba1c","TG","HDL_C","Creatinine","ALT","WHR"];
-  const REQUIRED = ["SBP","hba1c","TG","HDL_C","Creatinine","ALT","Waist","Hip"];
+  const BASE_REQUIRED = ["SBP","hba1c","TG","HDL_C","Creatinine","ALT"];
   const CLASSES = [1,2,3,4,5];
   const COLORS = { 1:"#1f77b4", 2:"#9467bd", 3:"#d62728", 4:"#ff7f0e", 5:"#2ca02c" };
   const NAME_EN = {1:"Low-risk obesity", 2:"Renal-dominant obesity", 3:"Hyperglycaemic obesity", 4:"High-HDL obesity", 5:"Dyslipidaemic–hepatic obesity"};
@@ -282,6 +290,7 @@
   let probChart = null, chartMode = 0, lastResult = null;
   let lastBatchOutput = "";
   let lastBatchN = 0;
+  let whrMode = "auto";
 
   // ═══════════ Helpers ═══════════
   function toNative(f, raw) {
@@ -295,9 +304,76 @@
     if (f === "WHR") return 4;
     return 1;
   }
+  function requiredFields() {
+    return whrMode === "manual" ? [...BASE_REQUIRED, "WHR"] : [...BASE_REQUIRED, "Waist", "Hip"];
+  }
+  function setControlDisabled(id, disabled) {
+    const el = $(id);
+    if (!el) return;
+    el.disabled = disabled;
+    el.classList.toggle("opacity-40", disabled);
+    el.classList.toggle("cursor-not-allowed", disabled);
+  }
+  function styleWHRModeButtons() {
+    const auto = $("whr-mode-auto"), manual = $("whr-mode-manual");
+    if (auto) auto.className = whrMode === "auto"
+      ? "px-2.5 py-1 text-[10px] font-semibold bg-navy-700 text-white transition-colors"
+      : "px-2.5 py-1 text-[10px] font-semibold text-slate-500 bg-transparent transition-colors";
+    if (manual) manual.className = whrMode === "manual"
+      ? "px-2.5 py-1 text-[10px] font-semibold bg-navy-700 text-white transition-colors"
+      : "px-2.5 py-1 text-[10px] font-semibold text-slate-500 bg-transparent transition-colors";
+  }
+  function applyWHRModeUI() {
+    const whr = $("WHR");
+    const whrWrap = $("WHR-wrap");
+    const waist = $("Waist"), hip = $("Hip");
+    const manual = whrMode === "manual";
+
+    if (whr) {
+      whr.readOnly = !manual;
+      whr.placeholder = t(manual ? "ph_WHR_manual" : "ph_WHR");
+      whr.className = manual
+        ? "flex-1 px-3.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight"
+        : "flex-1 px-3.5 py-2.5 text-center text-sm text-slate-500 bg-slate-100 tracking-tight cursor-not-allowed";
+    }
+    if (whrWrap) {
+      whrWrap.className = manual
+        ? "rounded-xl overflow-hidden bg-slate-100 border border-slate-200 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white focus-within:border-blue-400 transition-all"
+        : "rounded-xl overflow-hidden bg-slate-200 border border-slate-200";
+    }
+    for (const id of ["Waist","Hip","Waist-minus","Waist-plus","Hip-minus","Hip-plus"]) setControlDisabled(id, manual);
+    if (waist) waist.classList.toggle("cursor-not-allowed", manual);
+    if (hip) hip.classList.toggle("cursor-not-allowed", manual);
+    if ($("fill-hint")) $("fill-hint").textContent = t(manual ? "fillHintManual" : "fillHint");
+    styleWHRModeButtons();
+  }
+  window.setWHRMode = function(mode) {
+    const nextMode = mode === "manual" ? "manual" : "auto";
+    if (whrMode === nextMode) {
+      applyWHRModeUI();
+      checkAll();
+      return;
+    }
+    whrMode = nextMode;
+    const whr = $("WHR");
+    const waist = $("Waist"), hip = $("Hip");
+    const manual = whrMode === "manual";
+    applyWHRModeUI();
+
+    if (manual) {
+      if (waist) { waist.value = ""; clearWarn(waist.closest(".input-group")); }
+      if (hip) { hip.value = ""; clearWarn(hip.closest(".input-group")); }
+      if (whr) whr.dataset.raw = "";
+    } else {
+      if (whr) { whr.value = ""; whr.dataset.raw = ""; clearWarn(whr.closest(".input-group")); }
+      window.calcWHR();
+    }
+    checkAll();
+  };
 
   // ═══════════ Auto-calc WHR & BMI ═══════════
   window.calcWHR = function() {
+    if (whrMode === "manual") return;
     const w = parseFloat($("Waist").value), h = parseFloat($("Hip").value);
     if (!isNaN(w) && !isNaN(h) && h > 0) {
       const whr = w / h;
@@ -626,7 +702,9 @@
   window._hardLimitBlocked = false;
   function checkAll() {
     let allFilled = true, anyHard = false;
-    for (const f of REQUIRED) {
+    const inactive = whrMode === "manual" ? ["Waist","Hip"] : ["WHR"];
+    for (const f of inactive) clearWarn($(f)?.closest(".input-group"));
+    for (const f of requiredFields()) {
       const el=$(f), raw=el.value.trim(), card=el.closest(".input-group");
       const hardEl=card?.querySelector(".hard-err"), softEl=card?.querySelector(".soft-warn");
       if (raw==="") { allFilled=false; clearWarn(card); continue; }
@@ -668,6 +746,7 @@
 
   // ═══════════ Fill / Clear ═══════════
   window.spin = function(f, delta) {
+    if ((f==="Waist"||f==="Hip") && whrMode === "manual") return;
     const el = $(f), raw = el.value.trim();
     const nv = raw === "" ? (ZP[f]?ZP[f].m:100) : (toNative(f, raw) || 0);
     const step = { SBP:0.1, hba1c:0.1, TG:0.01, HDL_C:0.01, Creatinine:0.1, ALT:0.1, Waist:0.1, Hip:0.1 }[f] || 0.1;
@@ -688,7 +767,7 @@
   window.spinWeight = function(d) { const el=$("Weight"); const v=parseFloat(el.value)||95; el.value=Math.max(30,Math.min(300,(v+d*5).toFixed(1))); el.dispatchEvent(new Event("input",{bubbles:true})); window.calcBMI(); };
   window.fillDemo = function() {
     const patient = DEMOS[Math.floor(Math.random()*DEMOS.length)];
-    const fields = ["SBP","hba1c","TG","HDL_C","Creatinine","ALT","Waist","Hip"];
+    const fields = whrMode === "manual" ? ["SBP","hba1c","TG","HDL_C","Creatinine","ALT"] : ["SBP","hba1c","TG","HDL_C","Creatinine","ALT","Waist","Hip"];
     for (const f of fields) {
       const el=$(f), sel=$(f+"-unit");
       const unit = (sel&&sel.value!=="native")?sel.value:null;
@@ -698,7 +777,14 @@
       clearWarn(el.closest(".input-group"));
       el.dispatchEvent(new Event("input",{bubbles:true}));
     }
-    window.calcWHR();
+    if (whrMode === "manual") {
+      $("WHR").value = (patient.Waist / patient.Hip).toFixed(4);
+      $("WHR").dataset.raw = "";
+      clearWarn($("WHR").closest(".input-group"));
+      $("WHR").dispatchEvent(new Event("input",{bubbles:true}));
+    } else {
+      window.calcWHR();
+    }
     const idx = DEMOS.indexOf(patient);
     const zhNames = ["低风险肥胖","肾脏主导","高血糖","高HDL","血脂异常肝脏"];
     const enNames = ["Low-risk obesity","Renal-dominant","Hyperglycaemic","High-HDL","Dyslipidaemic-hepatic"];
@@ -711,7 +797,7 @@
     checkAll();
   };
   window.clearAll = function() {
-    for (const f of REQUIRED) { $(f).value=""; clearWarn($(f).closest(".input-group")); }
+    for (const f of [...BASE_REQUIRED,"Waist","Hip","WHR"]) { $(f).value=""; clearWarn($(f).closest(".input-group")); }
     $("WHR").value=""; $("WHR").dataset.raw=""; $("bmi-warn").classList.add("hidden");
     if(probChart){probChart.destroy();probChart=null;}
     lastResult=null; $("results-area").classList.add("hidden");
@@ -732,8 +818,8 @@
     document.getElementById("btn-zh").classList.toggle("bg-transparent",lang!=="zh");
     document.getElementById("btn-zh").classList.toggle("text-white/80",lang!=="zh");
     document.title=t("title");
-    $("fill-hint").textContent=t("fillHint");
     $("btn-calc").textContent=t("btnCalc");
+    applyWHRModeUI();
     checkAll();
     const tb=$("tab-bar"); if(tb)tb.textContent=LANG==="zh"?"柱状图":"Bar Chart";
     const tr=$("tab-radar"); if(tr)tr.textContent=LANG==="zh"?"雷达图":"Radar";
@@ -829,13 +915,14 @@
 
   // ═══════════ Init ═══════════
   document.addEventListener("DOMContentLoaded",()=>{
-    for(const f of REQUIRED) { const el=$(f); el.addEventListener("input",checkAll); el.addEventListener("blur",checkAll); }
+    for(const f of [...BASE_REQUIRED,"Waist","Hip","WHR"]) { const el=$(f); el.addEventListener("input",checkAll); el.addEventListener("blur",checkAll); }
     for(const f of FEATURES) { const el=$(f); if(el)el.addEventListener("keydown",e=>{if(e.key==="Enter")window.calc();}); }
     $("Waist").addEventListener("input",window.calcWHR); $("Hip").addEventListener("input",window.calcWHR);
     $("Height").addEventListener("input",window.calcBMI); $("Weight").addEventListener("input",window.calcBMI);
     const batchInput = $("batch-csv-input");
     if (batchInput) batchInput.addEventListener("change", e=>window.handleBatchCsv(e.target.files?.[0]));
     setupBatchDropZone();
+    window.setWHRMode("auto");
     checkAll();
   });
 })();
