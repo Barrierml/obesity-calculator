@@ -41,8 +41,8 @@
       ph_ALT: "e.g. 25",
       ph_Waist: "e.g. 100",
       ph_Hip: "e.g. 105",
-      ph_Waist_disabled: "Disabled in direct WHR mode",
-      ph_Hip_disabled: "Disabled in direct WHR mode",
+      ph_Waist_disabled: "Locked: WHR",
+      ph_Hip_disabled: "Locked: WHR",
       ph_Height: "e.g. 170",
       ph_Weight: "e.g. 95",
       hardLimitMsg: "Value exceeds human physiological range. Please verify.",
@@ -159,8 +159,8 @@
       ph_ALT: "例如 25",
       ph_Waist: "例如 100",
       ph_Hip: "例如 105",
-      ph_Waist_disabled: "直接输入 WHR 模式下不可填写",
-      ph_Hip_disabled: "直接输入 WHR 模式下不可填写",
+      ph_Waist_disabled: "已锁定：WHR",
+      ph_Hip_disabled: "已锁定：WHR",
       ph_Height: "例如 170",
       ph_Weight: "例如 95",
       hardLimitMsg: "数值超出人类常规生理极限，请核对输入是否有误。",
@@ -318,6 +318,13 @@
     el.classList.toggle("opacity-40", disabled);
     el.classList.toggle("cursor-not-allowed", disabled);
   }
+  function setInputUnitMuted(input, muted) {
+    const unit = input?.closest(".flex")?.querySelector("span");
+    if (!unit) return;
+    unit.className = muted
+      ? "w-14 inline-flex items-center justify-center text-[11px] text-slate-300 select-none font-normal"
+      : "w-14 inline-flex items-center justify-center text-[11px] text-slate-400 select-none font-normal";
+  }
   function styleWHRModeButtons() {
     const auto = $("whr-mode-auto"), manual = $("whr-mode-manual");
     if (auto) auto.className = whrMode === "auto"
@@ -339,20 +346,31 @@
       whr.className = manual
         ? "flex-1 px-3.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight"
         : "flex-1 px-3.5 py-2.5 text-center text-sm text-slate-500 bg-slate-100 tracking-tight cursor-not-allowed";
+      setInputUnitMuted(whr, !manual);
     }
     if (whrWrap) {
       whrWrap.className = manual
         ? "rounded-xl overflow-hidden bg-slate-100 border border-slate-200 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white focus-within:border-blue-400 transition-all"
         : "rounded-xl overflow-hidden bg-slate-200 border border-slate-200";
     }
-    for (const id of ["Waist","Hip","Waist-minus","Waist-plus","Hip-minus","Hip-plus"]) setControlDisabled(id, manual);
+    for (const id of ["Waist-minus","Waist-plus","Hip-minus","Hip-plus"]) setControlDisabled(id, manual);
     if (waist) {
+      waist.readOnly = manual;
       waist.placeholder = t(manual ? "ph_Waist_disabled" : "ph_Waist");
+      waist.className = manual
+        ? "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-500 placeholder:text-slate-500 bg-transparent tracking-tight cursor-not-allowed"
+        : "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight";
       waist.classList.toggle("cursor-not-allowed", manual);
+      setInputUnitMuted(waist, manual);
     }
     if (hip) {
+      hip.readOnly = manual;
       hip.placeholder = t(manual ? "ph_Hip_disabled" : "ph_Hip");
+      hip.className = manual
+        ? "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-500 placeholder:text-slate-500 bg-transparent tracking-tight cursor-not-allowed"
+        : "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight";
       hip.classList.toggle("cursor-not-allowed", manual);
+      setInputUnitMuted(hip, manual);
     }
     if ($("fill-hint")) $("fill-hint").textContent = t(manual ? "fillHintManual" : "fillHint");
     styleWHRModeButtons();
