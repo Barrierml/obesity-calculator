@@ -331,7 +331,7 @@
       : "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight";
     if (wrap) {
       wrap.className = locked
-        ? "rounded-xl overflow-hidden bg-slate-200 border border-slate-200"
+        ? "rounded-xl overflow-hidden bg-slate-200 border border-slate-200 cursor-not-allowed"
         : "rounded-xl overflow-hidden bg-slate-100 border border-slate-200 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white focus-within:border-blue-400 transition-all";
     }
     if (!unit) return;
@@ -355,8 +355,8 @@
     if (whr) {
       whr.placeholder = t(manual ? "ph_WHR_manual" : "ph_WHR");
       whr.className = manual
-        ? "flex-1 px-3.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight"
-        : "flex-1 px-3.5 py-2.5 text-center text-sm text-slate-500 bg-slate-100 tracking-tight cursor-not-allowed pointer-events-none";
+        ? "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight"
+        : "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-500 bg-slate-100 tracking-tight cursor-not-allowed pointer-events-none";
       whr.disabled = false;
       whr.readOnly = !manual;
       whr.tabIndex = manual ? 0 : -1;
@@ -366,8 +366,9 @@
     if (whrWrap) {
       whrWrap.className = manual
         ? "rounded-xl overflow-hidden bg-slate-100 border border-slate-200 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white focus-within:border-blue-400 transition-all"
-        : "rounded-xl overflow-hidden bg-slate-200 border border-slate-200";
+        : "rounded-xl overflow-hidden bg-slate-200 border border-slate-200 cursor-not-allowed";
     }
+    for (const id of ["WHR-minus","WHR-plus"]) setControlDisabled(id, !manual);
     for (const id of ["Waist-minus","Waist-plus","Hip-minus","Hip-plus"]) setControlDisabled(id, manual);
     if (waist) {
       waist.placeholder = t(manual ? "ph_Waist_disabled" : "ph_Waist");
@@ -779,10 +780,11 @@
 
   // ═══════════ Fill / Clear ═══════════
   window.spin = function(f, delta) {
+    if (f === "WHR" && whrMode !== "manual") return;
     if ((f==="Waist"||f==="Hip") && whrMode === "manual") return;
     const el = $(f), raw = el.value.trim();
     const nv = raw === "" ? (ZP[f]?ZP[f].m:100) : (toNative(f, raw) || 0);
-    const step = { SBP:0.1, hba1c:0.1, TG:0.01, HDL_C:0.01, Creatinine:0.1, ALT:0.1, Waist:0.1, Hip:0.1 }[f] || 0.1;
+    const step = { SBP:0.1, hba1c:0.1, TG:0.01, HDL_C:0.01, Creatinine:0.1, ALT:0.1, Waist:0.1, Hip:0.1, WHR:0.01 }[f] || 0.1;
     const lim = HARD[f] || [0,9999];
     const newNative = Math.max(lim[0], Math.min(lim[1], nv + delta * step));
     const sel = $(f+"-unit"); const unit = (sel && sel.value !== "native") ? sel.value : null;
@@ -796,6 +798,7 @@
   window.spinSBP = function(d) { window.spin("SBP", d); };
   window.spinWaist = function(d) { window.spin("Waist", d); };
   window.spinHip = function(d) { window.spin("Hip", d); };
+  window.spinWHR = function(d) { window.spin("WHR", d); };
   window.spinHeight = function(d) { const el=$("Height"); const v=parseFloat(el.value)||170; el.value=Math.max(100,Math.min(250,(v+d*5).toFixed(1))); el.dispatchEvent(new Event("input",{bubbles:true})); window.calcBMI(); };
   window.spinWeight = function(d) { const el=$("Weight"); const v=parseFloat(el.value)||95; el.value=Math.max(30,Math.min(300,(v+d*5).toFixed(1))); el.dispatchEvent(new Event("input",{bubbles:true})); window.calcBMI(); };
   window.fillDemo = function() {
