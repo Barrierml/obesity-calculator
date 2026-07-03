@@ -41,6 +41,8 @@
       ph_ALT: "e.g. 25",
       ph_Waist: "e.g. 100",
       ph_Hip: "e.g. 105",
+      ph_Waist_disabled: "Disabled in direct WHR mode",
+      ph_Hip_disabled: "Disabled in direct WHR mode",
       ph_Height: "e.g. 170",
       ph_Weight: "e.g. 95",
       hardLimitMsg: "Value exceeds human physiological range. Please verify.",
@@ -157,6 +159,8 @@
       ph_ALT: "例如 25",
       ph_Waist: "例如 100",
       ph_Hip: "例如 105",
+      ph_Waist_disabled: "直接输入 WHR 模式下不可填写",
+      ph_Hip_disabled: "直接输入 WHR 模式下不可填写",
       ph_Height: "例如 170",
       ph_Weight: "例如 95",
       hardLimitMsg: "数值超出人类常规生理极限，请核对输入是否有误。",
@@ -342,8 +346,14 @@
         : "rounded-xl overflow-hidden bg-slate-200 border border-slate-200";
     }
     for (const id of ["Waist","Hip","Waist-minus","Waist-plus","Hip-minus","Hip-plus"]) setControlDisabled(id, manual);
-    if (waist) waist.classList.toggle("cursor-not-allowed", manual);
-    if (hip) hip.classList.toggle("cursor-not-allowed", manual);
+    if (waist) {
+      waist.placeholder = t(manual ? "ph_Waist_disabled" : "ph_Waist");
+      waist.classList.toggle("cursor-not-allowed", manual);
+    }
+    if (hip) {
+      hip.placeholder = t(manual ? "ph_Hip_disabled" : "ph_Hip");
+      hip.classList.toggle("cursor-not-allowed", manual);
+    }
     if ($("fill-hint")) $("fill-hint").textContent = t(manual ? "fillHintManual" : "fillHint");
     styleWHRModeButtons();
   }
