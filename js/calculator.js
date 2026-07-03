@@ -318,12 +318,24 @@
     el.classList.toggle("opacity-40", disabled);
     el.classList.toggle("cursor-not-allowed", disabled);
   }
-  function setInputUnitMuted(input, muted) {
-    const unit = input?.closest(".flex")?.querySelector("span");
+  function setControlLocked(id, locked) {
+    const input = $(id);
+    if (!input) return;
+    const wrap = input.closest(".rounded-xl");
+    const unit = input.closest(".flex")?.querySelector("span");
+    input.disabled = false;
+    input.readOnly = locked;
+    input.tabIndex = locked ? -1 : 0;
+    input.className = locked
+      ? "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-500 placeholder:text-slate-400 bg-slate-100 tracking-tight cursor-not-allowed pointer-events-none"
+      : "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight";
+    if (wrap) {
+      wrap.className = locked
+        ? "rounded-xl overflow-hidden bg-slate-200 border border-slate-200"
+        : "rounded-xl overflow-hidden bg-slate-100 border border-slate-200 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white focus-within:border-blue-400 transition-all";
+    }
     if (!unit) return;
-    unit.className = muted
-      ? "w-14 inline-flex items-center justify-center text-[11px] text-slate-300 select-none font-normal"
-      : "w-14 inline-flex items-center justify-center text-[11px] text-slate-400 select-none font-normal";
+    unit.className = "w-14 inline-flex items-center justify-center text-[11px] text-slate-400 select-none font-normal";
   }
   function styleWHRModeButtons() {
     const auto = $("whr-mode-auto"), manual = $("whr-mode-manual");
@@ -341,12 +353,15 @@
     const manual = whrMode === "manual";
 
     if (whr) {
-      whr.readOnly = !manual;
       whr.placeholder = t(manual ? "ph_WHR_manual" : "ph_WHR");
       whr.className = manual
         ? "flex-1 px-3.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight"
-        : "flex-1 px-3.5 py-2.5 text-center text-sm text-slate-500 bg-slate-100 tracking-tight cursor-not-allowed";
-      setInputUnitMuted(whr, !manual);
+        : "flex-1 px-3.5 py-2.5 text-center text-sm text-slate-500 bg-slate-100 tracking-tight cursor-not-allowed pointer-events-none";
+      whr.disabled = false;
+      whr.readOnly = !manual;
+      whr.tabIndex = manual ? 0 : -1;
+      const unit = whr.closest(".flex")?.querySelector("span");
+      if (unit) unit.className = "w-14 inline-flex items-center justify-center text-[11px] text-slate-400 select-none font-normal";
     }
     if (whrWrap) {
       whrWrap.className = manual
@@ -355,22 +370,12 @@
     }
     for (const id of ["Waist-minus","Waist-plus","Hip-minus","Hip-plus"]) setControlDisabled(id, manual);
     if (waist) {
-      waist.readOnly = manual;
       waist.placeholder = t(manual ? "ph_Waist_disabled" : "ph_Waist");
-      waist.className = manual
-        ? "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-500 placeholder:text-slate-500 bg-transparent tracking-tight cursor-not-allowed"
-        : "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight";
-      waist.classList.toggle("cursor-not-allowed", manual);
-      setInputUnitMuted(waist, manual);
+      setControlLocked("Waist", manual);
     }
     if (hip) {
-      hip.readOnly = manual;
       hip.placeholder = t(manual ? "ph_Hip_disabled" : "ph_Hip");
-      hip.className = manual
-        ? "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-500 placeholder:text-slate-500 bg-transparent tracking-tight cursor-not-allowed"
-        : "flex-1 px-0.5 py-2.5 text-center text-sm text-slate-700 placeholder:text-slate-300 bg-transparent tracking-tight";
-      hip.classList.toggle("cursor-not-allowed", manual);
-      setInputUnitMuted(hip, manual);
+      setControlLocked("Hip", manual);
     }
     if ($("fill-hint")) $("fill-hint").textContent = t(manual ? "fillHintManual" : "fillHint");
     styleWHRModeButtons();
